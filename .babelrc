@@ -1,15 +1,12 @@
 {
   "presets": [
-    [
-      "env", {
-        "modules": false
-      },
-    ],
-    "react"
+    ["env", {
+      "modules": false
+    }],
+    "react",
+    "stage-2"
   ],
   "plugins": [
-    "react-hot-loader/babel",
-    "transform-react-constant-elements",
-    "transform-react-inline-elements"
+    "react-hot-loader/babel"
   ]
 }

@@ -1,16 +1,24 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-
 // AppContainer is a necessary wrapper component for HMR
 import { AppContainer } from 'react-hot-loader'
+import {Provider} from 'react-redux'
 
 import App from './components/App'
+
+import configureStore from './redux/configureStore'
+
+const preloadedState = window.__PRELOADED_STATE__ || {}
+const store = configureStore(preloadedState)
 
 const render = (Component) => {
   ReactDOM.render(
     <AppContainer>
-      <Component />
-    </AppContainer>,
+      <Provider store={store}>
+        <Component />
+      </Provider>
+    </AppContainer>
+    ,
     document.getElementById('root')
   )
 }
