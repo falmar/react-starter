@@ -11,29 +11,6 @@ const VENDOR_LIBS = [
   'redux-thunk'
 ]
 
-const babelLoader = {
-  test: /\.jsx?$/,
-  use: [{
-    loader: 'babel-loader',
-    options: {
-      babelrc: false,
-      presets: [
-        ['env', {
-          'modules': false
-        }
-        ],
-        'react',
-        'stage-2'
-      ],
-      plugins: [
-        'transform-react-constant-elements',
-        'transform-react-inline-elements'
-      ]
-    }
-  }],
-  exclude: /node_modules/
-}
-
 const plugins = [
   new webpack.DefinePlugin({
     'process.env': {
@@ -66,7 +43,11 @@ module.exports = {
   },
   module: {
     rules: [
-      babelLoader,
+      {
+        test: /\.jsx?$/,
+        use: 'babel-loader',
+        exclude: /node_modules/
+      },
       {
         use: ['style-loader', 'css-loader'],
         test: /\.css/
