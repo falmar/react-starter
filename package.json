@@ -4,7 +4,7 @@
   "description": "React Starter",
   "main": "index.js",
   "scripts": {
-    "clean": "rimraf dist",
+    "clean": "rimraf build",
     "build": "eslint src && npm run clean && webpack -p --config webpack.config.prod.js",
     "start": "NODE_ENV=development webpack-dev-server --config webpack.config.dev.js",
     "test": "echo \"Error: no test specified\" && exit 1"

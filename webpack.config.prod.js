@@ -6,7 +6,7 @@ const VENDOR_LIBS = [
   'react',
   'react-dom',
   'react-redux',
-  'react-router',
+  'react-router-dom',
   'redux',
   'redux-thunk'
 ]
@@ -38,7 +38,7 @@ module.exports = {
     vendor: VENDOR_LIBS
   },
   output: {
-    path: join(__dirname, 'dist'),
+    path: join(__dirname, 'build'),
     filename: '[name].[chunkhash].js'
   },
   module: {
