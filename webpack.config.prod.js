@@ -1,4 +1,4 @@
-const {join} = require('path')
+const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
@@ -37,10 +37,12 @@ module.exports = {
     bundle: './src/index.js',
     vendor: VENDOR_LIBS
   },
+
   output: {
-    path: join(__dirname, 'build'),
+    path: path.resolve(__dirname, 'public'),
     filename: '[name].[chunkhash].js'
   },
+
   module: {
     rules: [
       {
@@ -49,8 +51,29 @@ module.exports = {
         exclude: /node_modules/
       },
       {
-        use: ['style-loader', 'css-loader'],
-        test: /\.css/
+        test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        use: 'url-loader?limit=10000&mimetype=application/font-woff'
+      },
+      {
+        test: /\.(jpe?g|png|gif|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        use: 'file-loader'
+      },
+      {
+        use: [
+          'style-loader',
+          'css-loader?importLoaders=1',
+          'postcss-loader'
+        ],
+        test: /\.css$/
+      },
+      {
+        use: [
+          'style-loader',
+          'css-loader?importLoaders=1',
+          'postcss-loader',
+          'sass-loader'
+        ],
+        test: /\.scss$/
       }
     ]
   },

@@ -1,8 +1,13 @@
-const {resolve} = require('path')
+const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const plugins = [
+  new webpack.DefinePlugin({
+    'process.env': {
+      NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
+    }
+  }),
   new webpack.HotModuleReplacementPlugin(),
   new webpack.NamedModulesPlugin(),
   new webpack.NoEmitOnErrorsPlugin(),
@@ -21,7 +26,7 @@ module.exports = {
   output: {
     filename: 'bundle.js',
 
-    path: resolve(__dirname, 'build'),
+    path: path.resolve(__dirname, 'build'),
 
     publicPath: '/'
   },
@@ -32,24 +37,41 @@ module.exports = {
     hot: true,
     port: '3000',
     host: '0.0.0.0',
-    contentBase: resolve(__dirname, 'build'),
+    contentBase: path.resolve(__dirname, 'public'),
     publicPath: '/',
     historyApiFallback: true
   },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.jsx?$/,
         use: 'babel-loader',
         exclude: /node_modules/
       },
       {
-        test: /\.css$/,
+        test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        use: 'url-loader?limit=10000&mimetype=application/font-woff'
+      },
+      {
+        test: /\.(jpe?g|png|gif|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        use: 'file-loader'
+      },
+      {
         use: [
           'style-loader',
-          'css-loader?modules',
+          'css-loader?importLoaders=1',
           'postcss-loader'
-        ]
+        ],
+        test: /\.css$/
+      },
+      {
+        use: [
+          'style-loader',
+          'css-loader?importLoaders=1',
+          'postcss-loader',
+          'sass-loader'
+        ],
+        test: /\.scss$/
       }
     ]
   },

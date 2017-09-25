@@ -1,5 +1,5 @@
 import React from 'react'
-import {BrowserRouter as Router, Link, Route} from 'react-router-dom'
+import { BrowserRouter as Router, Link, Route } from 'react-router-dom'
 
 import Counter from './Counter'
 
@@ -16,7 +16,7 @@ const App = () => {
           <div>
             <h1>React Starter </h1>
           </div>
-          )} />
+        )} />
         <Route path='/counter' component={Counter} />
       </div>
     </Router>
