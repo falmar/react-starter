@@ -1,21 +1,19 @@
-import {createStore, applyMiddleware} from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import logger from 'redux-logger'
 
 import rootReducer from './modules'
 
 // Call this function with an middleware you would like to use in dev
-const isDev = middleware => (
-  process.env.NODE_ENV !== 'production' ? middleware : null
-)
+const isDev = middleware => process.env.NODE_ENV !== 'production' ? middleware : null
 
 const middlewares = applyMiddleware(
   ...[
     // Add or remove the middlewares as you like.
-    // Use the helper function isDev to be filter
+    // Use the helper function isDev to filter out
     // development middlewares that should be removed
     // on production mode
-    isDev(logger()),
+    isDev(logger),
     thunk
   ].filter(
     // remove falsy "null" middlewares
