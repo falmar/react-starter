@@ -1,14 +1,14 @@
-import React from 'react'
-import {connect} from 'react-redux'
+import React, { Fragment } from 'react'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 const Counter = ({counter, increment, decrement}) => (
-  <div>
+  <Fragment>
     <h1>Counter: {counter}</h1>
     <button onClick={increment}>+</button>
     &nbsp;
     <button onClick={decrement}>-</button>
-  </div>
+  </Fragment>
 )
 
 Counter.propTypes = {
