@@ -6,6 +6,9 @@
     "react",
     "stage-2"
   ],
+  "plugins": [
+    "transform-runtime"
+  ],
   "env": {
     "development": {
       "plugins": [
