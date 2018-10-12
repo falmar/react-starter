@@ -10,11 +10,17 @@
   },
   "author": "David Lavieri",
   "license": "MIT",
+  "standard": {
+    "parser": "babel-eslint"
+  },
   "devDependencies": {
     "@babel/core": "^7.1.2",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
     "autoprefixer": "^9.1.5",
+    "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.4",
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^1.0.0",
@@ -31,6 +37,7 @@
     "webpack-dev-server": "^3.1.9"
   },
   "dependencies": {
+    "@babel/runtime": "^7.1.2",
     "prop-types": "^15.6.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
