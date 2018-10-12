@@ -1,4 +1,4 @@
-import {combineReducers} from 'redux'
+import { combineReducers } from 'redux'
 
 // import your reducers
 const counter = (state = 0, action) => {

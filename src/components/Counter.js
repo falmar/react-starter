@@ -2,9 +2,11 @@ import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-const Counter = ({counter, increment, decrement}) => (
+import './Counter.scss'
+
+const Counter = ({ counter, increment, decrement }) => (
   <Fragment>
-    <h1>Counter: {counter}</h1>
+    <h1 className={counter % 2 === 0 && 'blue'}>New Counter: {counter}</h1>
     <button onClick={increment}>+</button>
     &nbsp;
     <button onClick={decrement}>-</button>
@@ -22,8 +24,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  increment: () => dispatch({type: 'INCREMENT'}),
-  decrement: () => dispatch({type: 'DECREMENT'})
+  increment: () => dispatch({ type: 'INCREMENT' }),
+  decrement: () => dispatch({ type: 'DECREMENT' })
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Counter)
