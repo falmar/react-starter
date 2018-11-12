@@ -42,14 +42,14 @@ module.exports = {
         use: 'babel-loader'
       },
       {
-        test: /\.(woff(2)?|png|jpg|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/i,
+        test: /\.(woff(2)?|jpe?g|png|gif|)(\?v=[0-9]\.[0-9]\.[0-9])?$/i,
         use: [{
           loader: 'url-loader',
           options: { limit: 10000 }
         }]
       },
       {
-        test: /\.(jpe?g|png|gif|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         use: 'file-loader'
       },
       {
