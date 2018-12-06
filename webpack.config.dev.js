@@ -1,5 +1,4 @@
 const path = require('path')
-
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const plugins = [
@@ -18,7 +17,8 @@ module.exports = {
 
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].[hash].js'
+    filename: '[name].[hash].js',
+    publicPath: '/'
   },
 
   plugins: plugins,
