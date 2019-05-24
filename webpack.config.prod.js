@@ -1,12 +1,11 @@
 const path = require('path')
-const webpack = require('webpack')
 
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const plugins = [
-  new CleanWebpackPlugin(['dist']),
+  new CleanWebpackPlugin(),
   new HtmlWebpackPlugin({
     template: './index.html'
   })
@@ -64,7 +63,12 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        use: ['style-loader', 'css-loader?importLoaders=1', 'postcss-loader', 'sass-loader']
+        use: ['style-loader', {
+          loader: 'css-loader',
+          options: {
+            importLoaders: 1
+          }
+        }, 'postcss-loader', 'sass-loader']
       }
     ]
   }
