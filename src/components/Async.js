@@ -4,6 +4,8 @@ class AsyncComponent extends Component {
   constructor (props) {
     super(props)
 
+    this.unmounted = false
+
     this.state = {
       loading: true
     }
@@ -15,12 +17,16 @@ class AsyncComponent extends Component {
     this.load()
   }
 
+  componentWillUnmount () {
+    this.unmounted = true
+  }
+
   async load () {
     this.setState(old => ({ ...old, loading: true }))
 
     const { data } = await this.fakeResource()
 
-    if (data === 'datum') {
+    if (data === 'datum' && !this.unmounted) {
       this.setState(old => ({ ...old, loading: false }))
     }
   }

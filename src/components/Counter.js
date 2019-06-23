@@ -6,7 +6,7 @@ import './Counter.scss'
 
 const Counter = ({ counter, increment, decrement }) => (
   <Fragment>
-    <h1 className={counter % 2 === 0 && 'blue'}>New Counter: {counter}</h1>
+    <h1 className={(counter % 2 === 0 && 'blue') || undefined}>New Counter: {counter}</h1>
     <button onClick={increment}>+</button>
     &nbsp;
     <button onClick={decrement}>-</button>

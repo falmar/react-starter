@@ -34,6 +34,12 @@ module.exports = {
     historyApiFallback: true
   },
 
+  resolve: {
+    alias: {
+      'react-dom': '@hot-loader/react-dom'
+    }
+  },
+
   module: {
     rules: [
       {
