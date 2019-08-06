@@ -82,9 +82,7 @@ app.use((req, res, next) => {
 // catch all
 app.get('/*', (req, res) => {
   const routeContext = res.locals.routeContext
-
   const { content } = preRender(res.locals.store, routeContext)
-
   const helmet = Helmet.renderStatic()
 
   const replaces = {

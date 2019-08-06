@@ -1,6 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -19,6 +19,12 @@ const plugins = [
     }, {})
   }),
   new CleanWebpackPlugin(),
+  new MiniCssExtractPlugin({
+    // Options similar to the same options in webpackOptions.output
+    // both options are optional
+    filename: '[name].[hash].css',
+    chunkFilename: '[id].[hash].css'
+  }),
   new HtmlWebpackPlugin({
     template: './index.html'
   })
@@ -31,7 +37,15 @@ const optimization = {
     })
   ],
   splitChunks: {
-    chunks: 'all'
+    chunks: 'all',
+    cacheGroups: {
+      styles: {
+        name: 'styles',
+        test: /\.css$/,
+        chunks: 'all',
+        enforce: true
+      }
+    }
   }
 }
 
@@ -79,14 +93,18 @@ module.exports = {
         test: /\.css$/,
         use: [{
           loader: MiniCssExtractPlugin.loader,
-          options: {}
+          options: {
+            hmr: !process.env.APP_SSR
+          }
         }, 'css-loader', 'postcss-loader']
       },
       {
         test: /\.scss$/,
         use: [{
           loader: MiniCssExtractPlugin.loader,
-          options: {}
+          options: {
+            hmr: !process.env.APP_SSR
+          }
         }, {
           loader: 'css-loader',
           options: {

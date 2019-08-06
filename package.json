@@ -9,6 +9,7 @@
     "watch": "APP_SSR=1 webpack-cli --watch --config webpack.config.watch.js",
     "start-ssr": "nodemon --watch dist dist/server.js",
     "watch-ssr": "APP_SSR=1 webpack-cli --watch --config webpack.config.ssr.js",
+    "build-ssr": "APP_SSR=1 webpack-cli -p --config webpack.config.ssr.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "David Lavieri",
