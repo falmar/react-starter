@@ -1,11 +1,17 @@
 const path = require('path')
-
-const CleanWebpackPlugin = require('clean-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const plugins = [
   new CleanWebpackPlugin(),
+  new MiniCssExtractPlugin({
+    // Options similar to the same options in webpackOptions.output
+    // both options are optional
+    filename: '[name].[hash].css',
+    chunkFilename: '[id].[hash].css'
+  }),
   new HtmlWebpackPlugin({
     template: './index.html'
   })
@@ -18,7 +24,15 @@ const optimization = {
     })
   ],
   splitChunks: {
-    chunks: 'all'
+    chunks: 'all',
+    cacheGroups: {
+      styles: {
+        name: 'styles',
+        test: /\.css$/,
+        chunks: 'all',
+        enforce: true
+      }
+    }
   }
 }
 
@@ -39,6 +53,13 @@ module.exports = {
 
   devtool: 'source-map',
 
+  resolve: {
+    alias: {
+      '@components': path.resolve(__dirname, './src/components/'),
+      '@redux': path.resolve(__dirname, './src/redux/modules/')
+    }
+  },
+
   module: {
     rules: [
       {
@@ -47,23 +68,27 @@ module.exports = {
         use: 'babel-loader'
       },
       {
-        test: /\.(woff(2)?|jpe?g|png|gif|)(\?v=[0-9]\.[0-9]\.[0-9])?$/i,
+        test: /\.(ttf|eot|svg|woff(2)?|jpe?g|png|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         use: [{
-          loader: 'url-loader',
-          options: { limit: 10000 }
+          loader: 'file-loader',
+          options: {
+            name: '[name]_[hash].[ext]'
+          }
         }]
       },
       {
-        test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        use: 'file-loader'
-      },
-      {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader', 'postcss-loader']
+        use: [{
+          loader: MiniCssExtractPlugin.loader,
+          options: {}
+        }, 'css-loader', 'postcss-loader']
       },
       {
         test: /\.scss$/,
-        use: ['style-loader', {
+        use: [{
+          loader: MiniCssExtractPlugin.loader,
+          options: {}
+        }, {
           loader: 'css-loader',
           options: {
             importLoaders: 1
