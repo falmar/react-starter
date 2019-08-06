@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Helmet } from 'react-helmet'
 
 class AsyncComponent extends Component {
   constructor (props) {
@@ -42,6 +43,10 @@ class AsyncComponent extends Component {
 
     return (
       <div>
+        <Helmet>
+          <title>Async - React Starter</title>
+        </Helmet>
+
         {loading ? 'Loading...' : 'Done...'}
       </div>
     )

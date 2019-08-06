@@ -1,7 +1,20 @@
 const path = require('path')
+const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
+const envs = {
+  NODE_ENV: process.env.NODE_ENV,
+  APP_SSR: process.env.APP_SSR
+}
+
 const plugins = [
+  new webpack.DefinePlugin({
+    'process.env': Object.keys(envs).reduce(function (acc, key) {
+      acc[key] = JSON.stringify(envs[key])
+
+      return acc
+    }, {})
+  }),
   new HtmlWebpackPlugin({
     template: './index.html'
   })
@@ -27,7 +40,7 @@ module.exports = {
 
   devServer: {
     hot: true,
-    port: '3000',
+    port: process.env.PORT || '3000',
     host: '0.0.0.0',
     contentBase: path.resolve(__dirname, 'dist'),
     publicPath: '/',
@@ -36,7 +49,9 @@ module.exports = {
 
   resolve: {
     alias: {
-      'react-dom': '@hot-loader/react-dom'
+      'react-dom': '@hot-loader/react-dom',
+      '@components': path.resolve(__dirname, './src/components/'),
+      '@redux': path.resolve(__dirname, './src/redux/modules/')
     }
   },
 
@@ -48,14 +63,7 @@ module.exports = {
         use: 'babel-loader'
       },
       {
-        test: /\.(woff(2)?|jpe?g|png|gif|)(\?v=[0-9]\.[0-9]\.[0-9])?$/i,
-        use: [{
-          loader: 'url-loader',
-          options: { limit: 10000 }
-        }]
-      },
-      {
-        test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        test: /\.(ttf|eot|svg|woff(2)?|jpe?g|png|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         use: 'file-loader'
       },
       {

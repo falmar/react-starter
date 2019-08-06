@@ -1,11 +1,16 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { Helmet } from 'react-helmet'
 
 import './Counter.scss'
 
 const Counter = ({ counter, increment, decrement }) => (
   <Fragment>
+    <Helmet>
+      <title>Counter - React Starter</title>
+    </Helmet>
+
     <h1 className={(counter % 2 === 0 && 'blue') || undefined}>New Counter: {counter}</h1>
     <button onClick={increment}>+</button>
     &nbsp;

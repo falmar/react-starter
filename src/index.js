@@ -1,18 +1,20 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { hydrate, render } from 'react-dom'
+import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
-
-import App from './components/App'
 
 import configureStore from './redux/configureStore'
 
-const preloadedState = window.__PRELOADED_STATE__ || {}
+import App from '@components/App'
+
+const preloadedState = window && (window.__PRELOADED_STATE__ || {})
 const store = configureStore(preloadedState)
 
-ReactDOM.render(
+;(process.env.APP_SSR ? hydrate : render)(
   <Provider store={store}>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </Provider>
-  ,
-  document.getElementById('root')
+  , window.document.getElementById('root')
 )

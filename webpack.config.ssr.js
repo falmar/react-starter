@@ -1,9 +1,11 @@
 const path = require('path')
 const webpack = require('webpack')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+
+var nodeExternals = require('webpack-node-externals')
+
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const IgnoreEmitPlugin = require('ignore-emit-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const envs = {
   NODE_ENV: process.env.NODE_ENV,
@@ -16,12 +18,16 @@ const plugins = [
       acc[key] = JSON.stringify(envs[key])
 
       return acc
-    }, {})
+    }, {}),
+    window: JSON.stringify(null)
   }),
-  new CleanWebpackPlugin(),
-  new HtmlWebpackPlugin({
-    template: './index.html'
-  })
+  new MiniCssExtractPlugin({
+    // Options similar to the same options in webpackOptions.output
+    // both options are optional
+    filename: '[name].[hash].css',
+    chunkFilename: '[id].[hash].css'
+  }),
+  new IgnoreEmitPlugin(/\.css/)
 ]
 
 const optimization = {
@@ -36,21 +42,29 @@ const optimization = {
 }
 
 module.exports = {
-  mode: 'production',
-  target: 'web',
+  mode: process.env.NODE_ENV || 'development',
+  target: 'node',
 
-  entry: './src/index.js',
-
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name].[hash].js',
-    publicPath: '/'
+  node: {
+    __dirname: false
   },
 
-  plugins: plugins,
-  optimization: optimization,
+  entry: {
+    bundle: './src/server.js'
+  },
 
-  devtool: 'source-map',
+  output: {
+    path: path.resolve(__dirname, 'dist', 'assets'),
+    publicPath: '/assets/',
+    filename: '../server.js'
+  },
+
+  externals: [nodeExternals()],
+
+  plugins: plugins,
+  optimization: process.env.NODE_ENV === 'production' ? optimization : undefined,
+
+  devtool: 'inline-source-map',
 
   resolve: {
     alias: {
@@ -67,27 +81,23 @@ module.exports = {
         use: 'babel-loader'
       },
       {
-        test: /\.(ttf|eot|svg|woff(2)?|jpe?g|png|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        test: /\.(woff(2)?|jpe?g|png|gif|)(\?v=[0-9]\.[0-9]\.[0-9])?$/i,
         use: [{
-          loader: 'file-loader',
-          options: {
-            name: '[name]_[hash].[ext]'
-          }
+          loader: 'url-loader',
+          options: { limit: 10000 }
         }]
       },
       {
+        test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        use: 'file-loader'
+      },
+      {
         test: /\.css$/,
-        use: [{
-          loader: MiniCssExtractPlugin.loader,
-          options: {}
-        }, 'css-loader', 'postcss-loader']
+        use: ['css-loader', 'postcss-loader']
       },
       {
         test: /\.scss$/,
         use: [{
-          loader: MiniCssExtractPlugin.loader,
-          options: {}
-        }, {
           loader: 'css-loader',
           options: {
             importLoaders: 1

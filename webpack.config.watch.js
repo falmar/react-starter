@@ -1,8 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const envs = {
@@ -18,39 +16,37 @@ const plugins = [
       return acc
     }, {})
   }),
-  new CleanWebpackPlugin(),
+  new MiniCssExtractPlugin({
+    // Options similar to the same options in webpackOptions.output
+    // both options are optional
+    filename: '[name].[hash].css',
+    chunkFilename: '[id].[hash].css'
+  }),
   new HtmlWebpackPlugin({
-    template: './index.html'
+    template: './index.html',
+    filename: '../index.html'
   })
 ]
 
-const optimization = {
-  minimizer: [
-    new UglifyJsPlugin({
-      sourceMap: true
-    })
-  ],
-  splitChunks: {
-    chunks: 'all'
-  }
-}
-
 module.exports = {
-  mode: 'production',
+  mode: 'development',
   target: 'web',
 
-  entry: './src/index.js',
-
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name].[hash].js',
-    publicPath: '/'
+  entry: {
+    bundle: './src/index.js'
   },
 
-  plugins: plugins,
-  optimization: optimization,
+  output: {
+    path: path.resolve(__dirname, 'dist', 'assets'),
+    publicPath: '/assets/',
+    filename: '[name].js'
+  },
 
-  devtool: 'source-map',
+  externals: {},
+
+  plugins: plugins,
+
+  devtool: 'inline-source-map',
 
   resolve: {
     alias: {
@@ -68,12 +64,14 @@ module.exports = {
       },
       {
         test: /\.(ttf|eot|svg|woff(2)?|jpe?g|png|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            name: '[name]_[hash].[ext]'
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name]_[hash].[ext]'
+            }
           }
-        }]
+        ]
       },
       {
         test: /\.css$/,

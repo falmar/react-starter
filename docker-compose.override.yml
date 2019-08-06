@@ -1,0 +1,19 @@
+version: '3.5'
+
+# Local development
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: local.dockerfile
+    environment:
+      - PORT=80
+    ports:
+      - 3000:80
+    volumes:
+      - ./:/app
+    command:
+      - npm
+      - run
+      - start-ssr
