@@ -7,9 +7,9 @@ import './Counter.scss'
 const Counter = ({ counter, increment, decrement }) => (
   <>
     <h1 className={(counter % 2 === 0 && 'blue') || undefined}>New Counter: {counter}</h1>
-    <button onClick={increment}>Increment (+)</button>
+    <button onClick={increment}>( + )</button>
     &nbsp;
-    <button onClick={decrement}>Decrement (-)</button>
+    <button onClick={decrement}>( - )</button>
   </>
 )
 
