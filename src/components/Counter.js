@@ -1,16 +1,16 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import './Counter.scss'
 
 const Counter = ({ counter, increment, decrement }) => (
-  <Fragment>
+  <>
     <h1 className={(counter % 2 === 0 && 'blue') || undefined}>New Counter: {counter}</h1>
-    <button onClick={increment}>+</button>
+    <button onClick={increment}>Increment (+)</button>
     &nbsp;
-    <button onClick={decrement}>-</button>
-  </Fragment>
+    <button onClick={decrement}>Decrement (-)</button>
+  </>
 )
 
 Counter.propTypes = {
