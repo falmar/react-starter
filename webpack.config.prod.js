@@ -72,7 +72,7 @@ module.exports = {
         use: 'babel-loader'
       },
       {
-        test: /\.(ttf|eot|svg|woff(2)?|jpe?g|png|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        test: /\.(ttf|eot|svg|woff(2)?|otf|jpe?g|png|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         use: [{
           loader: 'file-loader',
           options: {
@@ -85,19 +85,39 @@ module.exports = {
         use: [{
           loader: MiniCssExtractPlugin.loader,
           options: {}
-        }, 'css-loader', 'postcss-loader']
+        }, {
+          loader: 'css-loader',
+          options: {
+            importLoaders: 1,
+            sourceMap: true
+          }
+        }, {
+          loader: 'postcss-loader',
+          options: { sourceMap: true }
+        }]
       },
       {
         test: /\.scss$/,
         use: [{
           loader: MiniCssExtractPlugin.loader,
-          options: {}
+          options: {
+            sourceMap: true
+          }
         }, {
           loader: 'css-loader',
           options: {
-            importLoaders: 1
+            importLoaders: 1,
+            sourceMap: true
           }
-        }, 'postcss-loader', 'sass-loader']
+        }, {
+          loader: 'postcss-loader',
+          options: { sourceMap: true }
+        }, 'resolve-url-loader', {
+          loader: 'sass-loader',
+          options: {
+            sourceMap: true
+          }
+        }]
       }
     ]
   }
