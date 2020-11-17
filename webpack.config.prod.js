@@ -9,8 +9,8 @@ const plugins = [
   new MiniCssExtractPlugin({
     // Options similar to the same options in webpackOptions.output
     // both options are optional
-    filename: '[name].[hash].css',
-    chunkFilename: '[id].[hash].css'
+    filename: '[name].[chunkhash].css',
+    chunkFilename: '[id].[chunkhash].css'
   }),
   new HtmlWebpackPlugin({
     template: './index.html'
@@ -20,9 +20,9 @@ const plugins = [
 const optimization = {
   minimizer: [
     new TerserPlugin({
-      sourceMap: true,
       parallel: true,
       terserOptions: {
+        sourceMap: true,
         ecma: 6
       }
     })
@@ -48,7 +48,7 @@ module.exports = {
 
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].[hash].js',
+    filename: '[name].[chunkhash].js',
     publicPath: '/'
   },
 
@@ -76,7 +76,7 @@ module.exports = {
         use: [{
           loader: 'file-loader',
           options: {
-            name: '[name]_[hash].[ext]'
+            name: '[name]_[chunkhash].[ext]'
           }
         }]
       },
@@ -100,9 +100,7 @@ module.exports = {
         test: /\.scss$/,
         use: [{
           loader: MiniCssExtractPlugin.loader,
-          options: {
-            sourceMap: true
-          }
+          options: {}
         }, {
           loader: 'css-loader',
           options: {
