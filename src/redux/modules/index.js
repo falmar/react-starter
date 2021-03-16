@@ -4,9 +4,9 @@ import { combineReducers } from 'redux'
 const counter = (state = 0, action) => {
   switch (action.type) {
     case 'INCREMENT':
-      return state + 1
+      return state + 6
     case 'DECREMENT':
-      return state - 1
+      return state - 2
     default:
       return state
   }
