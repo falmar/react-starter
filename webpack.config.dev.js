@@ -12,7 +12,7 @@ module.exports = {
   target: 'web',
 
   entry: {
-    bundle: './src/index.js'
+    bundle: ['react-hot-loader/patch', './src/index.js']
   },
 
   output: {

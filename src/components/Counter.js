@@ -28,4 +28,6 @@ const mapDispatchToProps = dispatch => ({
   decrement: () => dispatch({ type: 'DECREMENT' })
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Counter)
+const ConnectedCounter = connect(mapStateToProps, mapDispatchToProps)(Counter)
+
+export default ConnectedCounter
