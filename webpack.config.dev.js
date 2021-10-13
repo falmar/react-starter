@@ -29,9 +29,11 @@ module.exports = {
     hot: true,
     port: '3000',
     host: '0.0.0.0',
-    contentBase: path.resolve(__dirname, 'dist'),
-    publicPath: '/',
-    historyApiFallback: true
+    historyApiFallback: true,
+    static: {
+      directory: path.resolve(__dirname, 'dist'),
+      publicPath: '/'
+    }
   },
 
   resolve: {
