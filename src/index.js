@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 
@@ -10,12 +10,12 @@ import configureStore from './redux/configureStore'
 const preloadedState = window.__PRELOADED_STATE__ || {}
 const store = configureStore(preloadedState)
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root'))
+
+root.render(
   <BrowserRouter>
     <Provider store={store}>
       <App />
     </Provider>
   </BrowserRouter>
-  ,
-  document.getElementById('root')
 )

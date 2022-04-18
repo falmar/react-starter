@@ -1,6 +1,5 @@
 import React from 'react'
-import { hot } from 'react-hot-loader/root'
-import { Link, Route } from 'react-router-dom'
+import { Link, Route, Routes } from 'react-router-dom'
 
 import Home from './Home'
 import Counter from './Counter'
@@ -15,11 +14,13 @@ const App = () => {
 
       <br />
 
-      <Route path='/' exact render={Home} />
-      <Route path='/counter' component={Counter} />
-      <Route path='/async' component={Async} />
+      <Routes>
+        <Route path='/' exact element={<Home />} />
+        <Route path='/counter' element={<Counter />} />
+        <Route path='/async' element={<Async />} />
+      </Routes>
     </div>
   )
 }
 
-export default hot(App)
+export default App

@@ -1,10 +1,12 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 
 const plugins = [
   new HtmlWebpackPlugin({
     template: './index.html'
-  })
+  }),
+  new ReactRefreshWebpackPlugin()
 ]
 
 module.exports = {
@@ -12,7 +14,7 @@ module.exports = {
   target: 'web',
 
   entry: {
-    bundle: ['react-hot-loader/patch', './src/index.js']
+    bundle: ['./src/index.js']
   },
 
   output: {
@@ -38,7 +40,6 @@ module.exports = {
 
   resolve: {
     alias: {
-      'react-dom': '@hot-loader/react-dom',
       '@components': path.resolve(__dirname, './src/components/'),
       '@redux': path.resolve(__dirname, './src/redux/modules/')
     }
