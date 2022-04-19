@@ -1,23 +1,40 @@
-import React from 'react'
+import React, { Suspense, lazy } from 'react'
 import { Link, Route, Routes } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 
-import Home from './Home'
-import Counter from './Counter'
-import Async from './Async'
+import Home from '@components/Home'
+import Counter from '@components/Counter'
+import Async from '@components/Async'
+
+const Sus = lazy(() => import('@components/Suspense'))
 
 const App = () => {
   return (
     <div>
       <div>
-        <Link to='/'>Home</Link> | <Link to='/counter'>Counter</Link> | <Link to='/async'>Async</Link>
+        <Link to='/'>Home</Link> |&nbsp;
+        <Link to='/counter'>Counter</Link> |&nbsp;
+        <Link to='/async'>Async</Link> |&nbsp;
+        <Link to='/suspense'>Supense</Link>
       </div>
 
-      <br />
+      <Helmet>
+        <title>introduction</title>
+      </Helmet>
 
       <Routes>
-        <Route path='/' exact element={<Home />} />
+        <Route exact path='/' element={<Home />} />
+        <Route path='/counter' element={<Counter />} />
         <Route path='/counter' element={<Counter />} />
         <Route path='/async' element={<Async />} />
+        <Route
+          path='/suspense'
+          element={(
+            <Suspense fallback='...loading'>
+              <Sus />
+            </Suspense>
+          )}
+        />
       </Routes>
     </div>
   )

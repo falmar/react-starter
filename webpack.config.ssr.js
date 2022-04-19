@@ -1,40 +1,26 @@
 const path = require('path')
 const webpack = require('webpack')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const IgnoreEmitPlugin = require('ignore-emit-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
-// const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const nodeExternals = require('webpack-node-externals')
 
 const envs = {
-  NODE_ENV: 'production'
+  NODE_ENV: process.env.NODE_ENV || 'development',
+  APP_SSR: '1',
+  APP_SRV: '1',
+  PORT: process.env.PORT
 }
 
 const plugins = [
-  new CleanWebpackPlugin(),
   new webpack.DefinePlugin({
     'process.env': Object.keys(envs).reduce(function (acc, key) {
       acc[key] = JSON.stringify(envs[key])
 
       return acc
-    }, {})
+    }, {}),
+    window: JSON.stringify(null)
   }),
-
-  new HtmlWebpackPlugin({
-    minify: {
-      collapseWhitespace: true,
-      removeComments: true,
-      removeRedundantAttributes: true,
-      removeScriptTypeAttributes: true,
-      removeStyleLinkTypeAttributes: true,
-      useShortDoctype: true,
-      /* @formatter:off  */
-      quoteCharacter: "'"
-      /* @formatter:on  */
-    },
-
-    template: './index.html',
-    filename: '../index.html'
-  })
+  new IgnoreEmitPlugin(/\.(css|ttf|eot|svg|woff(2)?|otf|jpe?g|png|gif)/)
 ]
 
 const optimization = {
@@ -48,34 +34,37 @@ const optimization = {
     })
   ],
   splitChunks: {
-    chunks: 'all',
-    cacheGroups: {
-      styles: {
-        name: 'styles',
-        test: /\.css$/,
-        chunks: 'all',
-        enforce: true
-      }
-    }
+    chunks: 'all'
   }
 }
+const withSourceMap = process.env.APP_ENV !== 'production'
 
 module.exports = {
-  mode: 'production',
-  target: 'web',
+  mode: process.env.NODE_ENV || 'development',
+  target: 'node',
 
-  entry: './src/index.js',
+  node: {
+    __dirname: false
+  },
+
+  entry: {
+    bundle: './src/server/index.js'
+  },
 
   output: {
     path: path.resolve(__dirname, 'dist', 'assets'),
-    filename: '[name].[chunkhash].js',
+    filename: '../server.js',
     publicPath: '/assets/'
   },
 
-  plugins: plugins,
-  optimization: optimization,
+  externals: [nodeExternals(), {
+    grecaptcha: {}
+  }],
 
-  devtool: 'source-map',
+  plugins: plugins,
+  optimization: process.env.NODE_ENV === 'production' ? optimization : undefined,
+
+  devtool: 'inline-source-map',
 
   resolve: {
     alias: {
@@ -93,41 +82,45 @@ module.exports = {
       },
       {
         test: /\.(ttf|eot|svg|woff(2)?|otf|jpe?g|png|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            name: '[name]_[chunkhash].[ext]'
-          }
-        }]
+        type: 'asset/resource'
       },
       {
         test: /\.css$/,
-        use: [{ loader: 'style-loader' }, {
+        use: [{
           loader: 'css-loader',
           options: {
             importLoaders: 1,
-            sourceMap: false
+            sourceMap: withSourceMap
           }
         }, {
           loader: 'postcss-loader',
-          options: { sourceMap: false }
+          options: { sourceMap: withSourceMap }
         }]
       },
       {
         test: /\.scss$/,
-        use: [{ loader: 'style-loader' }, {
+        use: [{
           loader: 'css-loader',
           options: {
             importLoaders: 1,
-            sourceMap: false
+            sourceMap: withSourceMap
           }
         }, {
           loader: 'postcss-loader',
-          options: { sourceMap: false }
+          options: { sourceMap: withSourceMap }
         }, 'resolve-url-loader', {
           loader: 'sass-loader',
+          options: { sourceMap: true }
+        }]
+      },
+      {
+        type: 'javascript/auto',
+        test: /favicon\/manifest\.json$/,
+        exclude: /node_modules/,
+        use: [{
+          loader: 'file-loader',
           options: {
-            sourceMap: true
+            name: 'favicons/[name].[ext]'
           }
         }]
       }

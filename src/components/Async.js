@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+import './Async.scss'
+
 class AsyncComponent extends Component {
   constructor (props) {
     super(props)
@@ -41,7 +43,7 @@ class AsyncComponent extends Component {
     const { loading } = this.state
 
     return (
-      <div>
+      <div className='async-css'>
         {loading ? 'Loading...' : 'Done...'}
       </div>
     )

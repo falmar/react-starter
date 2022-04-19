@@ -6,6 +6,10 @@
   "scripts": {
     "build": "standard ./src/**/*.js && webpack --config webpack.config.prod.js",
     "start": "webpack serve --hot --config webpack.config.dev.js",
+    "watch": "APP_SSR=1 webpack --watch --config  webpack.config.watch.js",
+    "start-ssr": "APP_SSR=1 nodemon --watch dist dist/server.js",
+    "watch-ssr": "APP_SSR=1 webpack --watch --config webpack.config.ssr.js",
+    "build-ssr": "APP_SSR=1 webpack --config webpack.config.ssr.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "David Lavieri",
@@ -29,8 +33,10 @@
     "css-loader": "^6.7.1",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
+    "ignore-emit-webpack-plugin": "^2.0.6",
     "mini-css-extract-plugin": "^2.6.0",
     "node-sass": "^7.0.1",
+    "nodemon": "^2.0.15",
     "postcss": "^8.4.12",
     "postcss-loader": "^6.2.1",
     "prop-types": "^15.8.1",
@@ -44,12 +50,16 @@
     "url-loader": "^4.1.1",
     "webpack": "^5.72.0",
     "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.8.1"
+    "webpack-dev-server": "^4.8.1",
+    "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.17.9",
+    "compression": "^1.7.4",
+    "express": "^4.17.3",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "react-helmet": "^6.1.0",
     "react-redux": "^8.0.0",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",

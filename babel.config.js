@@ -1,7 +1,13 @@
 module.exports = {
   presets: [
-    '@babel/preset-env',
-    '@babel/preset-react'
+    [
+      '@babel/preset-env',
+      {
+        targets: process.env.APP_SSR === '1' ? { node: 'current' } : {}
+      }
+    ], [
+      '@babel/preset-react'
+    ]
   ],
 
   plugins: [
@@ -11,7 +17,7 @@ module.exports = {
 
   env: {
     development: {
-      plugins: ['react-refresh/babel']
+      plugins: process.env.APP_SSR === '1' ? [] : ['react-refresh/babel']
     },
     production: {
       plugins: [

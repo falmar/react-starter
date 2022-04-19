@@ -24,6 +24,11 @@ module.exports = {
   },
 
   plugins: plugins,
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    }
+  },
 
   devtool: 'inline-source-map',
 
