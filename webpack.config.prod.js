@@ -93,12 +93,7 @@ module.exports = {
       },
       {
         test: /\.(ttf|eot|svg|woff(2)?|otf|jpe?g|png|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            name: '[name]_[chunkhash].[ext]'
-          }
-        }]
+        type: 'asset/resource'
       },
       {
         test: /\.css$/,

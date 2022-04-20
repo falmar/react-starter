@@ -15,11 +15,11 @@ const App = () => {
         <Link to='/'>Home</Link> |&nbsp;
         <Link to='/counter'>Counter</Link> |&nbsp;
         <Link to='/async'>Async</Link> |&nbsp;
-        <Link to='/suspense'>Supense</Link>
+        <Link to='/suspense'>Suspense</Link>
       </div>
 
       <Helmet>
-        <title>introduction</title>
+        <title>React18 Starter!</title>
       </Helmet>
 
       <Routes>

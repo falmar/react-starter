@@ -44,7 +44,7 @@ app.use((req, res, next) => {
 
   const store = configureStore({})
 
-  // assume mobile
+  // Add
   req.locals = {
     store: store,
     routeContext: {
@@ -71,6 +71,10 @@ app.get('/*', (req, res) => {
     ),
     {
       onShellReady () {
+        if (didError) {
+          return
+        }
+
         res.statusCode = didError ? 500 : 200
         res.setHeader('Content-type', 'text/html')
 
@@ -87,9 +91,15 @@ app.get('/*', (req, res) => {
       },
       onError (err) {
         didError = true
+        res.status(500)
+        res.send('Something went wrong...')
         console.error(err)
       },
       onAllReady () {
+        if (didError) {
+          return
+        }
+
         // If you don't want streaming, use this instead of onShellReady.
         // This will fire after the entire page content is ready.
         // You can use this for crawlers or static generation.
@@ -98,6 +108,7 @@ app.get('/*', (req, res) => {
         // res.setHeader('Content-type', 'text/html')
         // stream.pipe(res)
 
+        // close html
         res.write(splitHTML[1])
       }
     }
