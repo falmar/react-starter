@@ -1,20 +1,16 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Helmet } from 'react-helmet'
 
 import './Suspense.scss'
 
-class AsyncComponent extends Component {
-  render () {
-    return (
-      <div className='suspense-css'>
-        Done...
+export default function AsyncComponent () {
+  return (
+    <div className='suspense-css'>
+      Done...
 
-        <Helmet>
-          <title>Suspension Title</title>
-        </Helmet>
-      </div>
-    )
-  }
+      <Helmet>
+        <title>Suspension Title</title>
+      </Helmet>
+    </div>
+  )
 }
-
-export default AsyncComponent

@@ -1,5 +1,8 @@
 import { combineReducers } from 'redux'
 
+export const increment = () => ({ type: 'INCREMENT' })
+export const decrement = () => ({ type: 'DECREMENT' })
+
 // import your reducers
 const counter = (state = 0, action) => {
   switch (action.type) {

@@ -1,53 +1,39 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 
 import './Async.scss'
 
-class AsyncComponent extends Component {
-  constructor (props) {
-    super(props)
+export default function AsyncComponent () {
+  const [loading, setLoading] = useState(true)
 
-    this.unmounted = false
+  // componentDidMount
+  useEffect(() => {
+    load()
+  }, [])
 
-    this.state = {
-      loading: true
-    }
+  // componentDidUpdate
 
-    this.load = this.load.bind(this)
-  }
-
-  componentDidMount () {
-    this.load()
-  }
-
-  componentWillUnmount () {
-    this.unmounted = true
-  }
-
-  async load () {
-    this.setState(old => ({ ...old, loading: true }))
-
-    const { data } = await this.fakeResource()
-
-    if (data === 'datum' && !this.unmounted) {
-      this.setState(old => ({ ...old, loading: false }))
-    }
-  }
-
-  fakeResource () {
+  // methods
+  const fakeResource = () => {
     return new Promise((resolve) => {
       setTimeout(() => resolve({ data: 'datum' }), 2000)
     })
   }
 
-  render () {
-    const { loading } = this.state
+  const load = async () => {
+    setLoading(true)
 
-    return (
-      <div className='async-css'>
-        {loading ? 'Loading...' : 'Done...'}
-      </div>
-    )
+    await fakeResource()
+
+    setLoading(false)
   }
-}
 
-export default AsyncComponent
+  if (loading) {
+    return null
+  }
+
+  return (
+    <div className='async-css'>
+      {loading ? 'Loading...' : 'Done...'}
+    </div>
+  )
+}

@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react'
+import React, { lazy, Suspense } from 'react'
 import { Link, Route, Routes } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 
@@ -8,7 +8,7 @@ import Async from '@components/Async'
 
 const Sus = lazy(() => import('@components/Suspense'))
 
-const App = () => {
+export default function App () {
   return (
     <div>
       <div>
@@ -39,5 +39,3 @@ const App = () => {
     </div>
   )
 }
-
-export default App
