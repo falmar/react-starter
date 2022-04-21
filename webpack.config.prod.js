@@ -3,7 +3,6 @@ const webpack = require('webpack')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
-// const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const envs = {
   NODE_ENV: 'production'
@@ -48,15 +47,7 @@ const optimization = {
     })
   ],
   splitChunks: {
-    chunks: 'all',
-    cacheGroups: {
-      styles: {
-        name: 'styles',
-        test: /\.css$/,
-        chunks: 'all',
-        enforce: true
-      }
-    }
+    chunks: 'all'
   }
 }
 
