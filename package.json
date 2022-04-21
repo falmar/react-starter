@@ -6,6 +6,10 @@
   "scripts": {
     "build": "standard ./src/**/*.js && webpack --config webpack.config.prod.js",
     "start": "RRFRESH=1 webpack serve --hot --config webpack.config.dev.js",
+    "watch": "webpack --watch --config  webpack.config.watch.js",
+    "start-ssr": "APP_SSR=1 nodemon --watch dist dist/server.js",
+    "watch-ssr": "APP_SSR=1 webpack --watch --config webpack.config.ssr.js",
+    "build-ssr": "APP_SSR=1 webpack --config webpack.config.ssr.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "David Lavieri",
@@ -46,11 +50,14 @@
     "url-loader": "^4.1.1",
     "webpack": "^5.72.0",
     "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.8.1"
+    "webpack-dev-server": "^4.8.1",
+    "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.17.9",
     "classnames": "^2.3.1",
+    "compression": "^1.7.4",
+    "express": "^4.17.3",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-helmet": "^6.1.0",
