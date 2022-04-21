@@ -7,7 +7,6 @@ const nodeExternals = require('webpack-node-externals')
 const envs = {
   NODE_ENV: process.env.NODE_ENV || 'development',
   APP_SSR: '1',
-  APP_SRV: '1',
   PORT: process.env.PORT
 }
 

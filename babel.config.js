@@ -17,7 +17,7 @@ module.exports = {
 
   env: {
     development: {
-      plugins: process.env.APP_SSR === '1' ? [] : ['react-refresh/babel']
+      plugins: process.env.RRFRESH === '1' ? ['react-refresh/babel'] : []
     },
     production: {
       plugins: [
