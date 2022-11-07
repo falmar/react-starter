@@ -99,17 +99,6 @@ module.exports = {
             loader: 'sass-loader',
             options: { sourceMap: true }
           }]
-      },
-      {
-        type: 'javascript/auto',
-        test: /favicon\/manifest\.json$/,
-        exclude: /node_modules/,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            name: 'favicons/[name].[ext]'
-          }
-        }]
       }
     ]
   }
