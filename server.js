@@ -1,6 +1,6 @@
-import path from 'path'
-import fs from 'fs'
-import { fileURLToPath } from 'url'
+import path from 'node:path'
+import fs from 'node:fs'
+import { fileURLToPath } from 'node:url'
 //
 
 import express from 'express'
@@ -8,7 +8,9 @@ import compression from 'compression'
 
 import { createServer as createViteServer } from 'vite'
 
-// import configureStore from './src/redux/index.js'
+import configureStore from './src/redux/index.js'
+
+const isProd = process.env.NODE_ENV === 'production'
 
 async function createServer () {
   const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -17,15 +19,19 @@ async function createServer () {
   const app = express()
 
   // ------- VITE
-  const vite = await createViteServer({
-    server: { middlewareMode: true },
-    appType: 'custom'
-  })
+  let vite
 
-  app.use(vite.middlewares)
+  if (isProd) {
+    // gzip
+    app.use(compression())
+  } else {
+    vite = await createViteServer({
+      server: { middlewareMode: true },
+      appType: 'custom'
+    })
 
-  // gzip
-  app.use(compression())
+    app.use(vite.middlewares)
+  }
 
   // health check
   app.get('/healthz', function (req, res) {
@@ -36,50 +42,54 @@ async function createServer () {
   })
 
   // static files
-  app.use('/assets', express.static(path.resolve(__dirname, 'assets'), { maxAge: '30d' }))
+  app.use('/assets', express.static(path.resolve(__dirname, 'client', 'assets'), { maxAge: '30d' }))
+
+  const indexProd = isProd ? fs.readFileSync(path.resolve(__dirname, './client/index.html'), 'utf-8') : ''
 
   app.disable('x-powered-by')
   app.enable('trust proxy')
 
   // REDUX MIDDLEWARE
-  // app.use((req, res, next) => {
-  //   if (path.extname(req.path)) {
-  //     res.status(404)
-  //     res.end()
-  //
-  //     return
-  //   }
-  //
-  //   // const store = configureStore({})
-  //
-  //   // Add
-  //   req.locals = {
-  //     // store: store,
-  //     routeContext: {
-  //       originalUrl: req.originalUrl,
-  //       origin: req.protocol + '://' + req.headers.host
-  //     }
-  //   }
-  //
-  //   next()
-  // })
+  app.use((req, res, next) => {
+    if (path.extname(req.path)) {
+      res.status(404)
+      res.end()
 
-  app.use('*', async (req, res, next) => {
-    try {
-      let clientHTML = fs.readFileSync(path.resolve(__dirname, 'index.html')).toString('utf8')
+      return
+    }
 
-      clientHTML = await vite.transformIndexHtml(req.originalUrl, clientHTML)
+    const store = configureStore({})
 
-      const splitHTML = clientHTML.split('<!--ssr-outlet-->')
-
-      const { render } = await vite.ssrLoadModule('/src/server.jsx')
-
-      const routeContext = {
+    // Add
+    req.locals = {
+      store: store,
+      routeContext: {
         originalUrl: req.originalUrl,
         origin: req.protocol + '://' + req.headers.host
       }
+    }
 
-      render({ splitHTML, routeContext, res })
+    next()
+  })
+
+  app.use('*', async (req, res, next) => {
+    try {
+      let clientHTML = indexProd
+      let render
+
+      if (isProd) {
+        render = (await import(path.resolve(__dirname, './server/server.js'))).render
+      } else {
+        clientHTML = fs.readFileSync(path.resolve(__dirname, '../index.html')).toString('utf8')
+        clientHTML = await vite.transformIndexHtml(req.originalUrl, clientHTML)
+        render = (await vite.ssrLoadModule(path.resolve(__dirname, '../src/server.jsx'))).render
+      }
+
+      const splitHTML = clientHTML.split('<!--ssr-outlet-->')
+
+      const { store, routeContext } = req.locals
+
+      render({ splitHTML, store, routeContext, res })
     } catch (e) {
       vite.ssrFixStacktrace(e)
       next(e)

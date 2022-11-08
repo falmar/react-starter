@@ -8,6 +8,7 @@
     "build": "standard \"./src/**/*.js\" && yarn run build:client && yarn run build:server",
     "build:client": "vite build --outDir dist/client",
     "build:server": "vite build --ssr src/server.jsx --outDir dist/server",
+    "build:roll": "rollup server.js --file dist/server.js",
     "start": "vite",
     "preview": "vite preview",
     "test": "echo \"Error: no test specified\" && exit 1",

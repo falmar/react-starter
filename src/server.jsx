@@ -5,12 +5,9 @@ import { Helmet } from 'react-helmet'
 import { Provider } from 'react-redux'
 
 import App from './components/App'
-import configureStore from './redux/index.js'
 
-export async function render ({ splitHTML, res, routeContext }) {
+export async function render ({ splitHTML, store, res, routeContext }) {
   let didError = false
-
-  const store = configureStore({})
 
   const stream = renderToPipeableStream(
     (
@@ -31,10 +28,14 @@ export async function render ({ splitHTML, res, routeContext }) {
 
         const helmet = Helmet.renderStatic()
 
+        const state = JSON.stringify(store.getState())
+        const storeTemplate = `<script>window.__PRELOADED_STATE__ = ${state}</script>`
+
         splitHTML[0] = splitHTML[0].replace('<meta id=\'helmet-title\'>', helmet.title.toString())
           .replace('<meta id=\'helmet-meta\'>', helmet.meta.toString())
           .replace('<meta id=\'helmet-link\'>', helmet.link.toString())
           .replace('<meta id=\'helmet-script\'>', helmet.script.toString())
+          .replace('<script id=\'redux-store\'></script>', storeTemplate)
 
         res.write(splitHTML[0])
 

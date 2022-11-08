@@ -4,7 +4,7 @@ import logger from 'redux-logger'
 // import reducers
 import reducers from './reducers.js'
 
-// Call this function with an middleware you would like to use in dev
+// Call this function with a middleware you would like to use in dev
 const isDev = middleware => process.env.NODE_ENV !== 'production' ? middleware : null
 
 const middlewares = [
@@ -13,14 +13,13 @@ const middlewares = [
   // development middlewares that should be removed
   // on production mode
   isDev(logger)
-].filter(
+]
   // remove falsy "null" middlewares
-  m => m
-)
+  .filter(m => m)
 
 export default preloadedState => {
   return configureStore({
-    initialState: preloadedState,
+    preloadedState,
     reducer: reducers,
     middleware: middlewares
   })
