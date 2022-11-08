@@ -19,7 +19,7 @@ export default function App () {
       </div>
 
       <Helmet>
-        <title>React18 Starter!</title>
+        <title>{import.meta.env.VITE_APP_NAME}</title>
       </Helmet>
 
       <Routes>

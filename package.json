@@ -8,9 +8,7 @@
     "build": "standard \"./src/**/*.js\" && yarn run build:client && yarn run build:server",
     "build:client": "vite build --outDir dist/client",
     "build:server": "vite build --ssr src/server.jsx --outDir dist/server",
-    "build:roll": "rollup server.js --file dist/server.js",
-    "start": "vite",
-    "preview": "vite preview",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "standard \"./src/**/*.js\""
   },
@@ -20,6 +18,7 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^2.2.0",
     "autoprefixer": "^10.4.4",
+    "dotenv": "^16.0.3",
     "nodemon": "^2.0.15",
     "postcss": "^8.4.12",
     "prop-types": "^15.8.1",

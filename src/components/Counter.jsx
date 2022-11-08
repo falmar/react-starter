@@ -16,7 +16,7 @@ export default function Counter () {
           'counter--blue': counter % 2 === 0
         })}
       >
-        New Counter: {counter}
+        Counter: {counter}
       </h1>
       <button onClick={() => dispatch(increment())}>( + )</button>
       &nbsp;

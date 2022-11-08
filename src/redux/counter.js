@@ -1,4 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit'
+import * as rtk from '@reduxjs/toolkit'
+
+const { createSlice } = rtk.default ?? rtk
 
 const counterSlice = createSlice({
   name: 'counter',

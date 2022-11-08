@@ -5,14 +5,18 @@ import { fileURLToPath } from 'node:url'
 
 import express from 'express'
 import compression from 'compression'
+import * as dotenv from 'dotenv'
 
 import { createServer as createViteServer } from 'vite'
 
 import configureStore from './src/redux/index.js'
 
+// load .env
+dotenv.config()
+
 const isProd = process.env.NODE_ENV === 'production'
 
-async function createServer () {
+;(async () => {
   const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
   // ------- EXPRESS
@@ -42,9 +46,11 @@ async function createServer () {
   })
 
   // static files
-  app.use('/assets', express.static(path.resolve(__dirname, 'client', 'assets'), { maxAge: '30d' }))
+  const assetPath = isProd ? path.resolve(__dirname, 'dist', 'client', 'assets') : path.resolve(__dirname, 'src', 'assets')
 
-  const indexProd = isProd ? fs.readFileSync(path.resolve(__dirname, './client/index.html'), 'utf-8') : ''
+  app.use('/assets', express.static(assetPath, { maxAge: '30d' }))
+
+  const indexProd = isProd ? fs.readFileSync(path.resolve(__dirname, './dist/client/index.html'), 'utf-8') : ''
 
   app.disable('x-powered-by')
   app.enable('trust proxy')
@@ -78,11 +84,11 @@ async function createServer () {
       let render
 
       if (isProd) {
-        render = (await import(path.resolve(__dirname, './server/server.js'))).render
+        render = (await import(path.resolve(__dirname, './dist/server/server.js'))).render
       } else {
-        clientHTML = fs.readFileSync(path.resolve(__dirname, '../index.html')).toString('utf8')
+        clientHTML = fs.readFileSync(path.resolve(__dirname, './index.html')).toString('utf8')
         clientHTML = await vite.transformIndexHtml(req.originalUrl, clientHTML)
-        render = (await vite.ssrLoadModule(path.resolve(__dirname, '../src/server.jsx'))).render
+        render = (await vite.ssrLoadModule(path.resolve(__dirname, './src/server.jsx'))).render
       }
 
       const splitHTML = clientHTML.split('<!--ssr-outlet-->')
@@ -91,7 +97,10 @@ async function createServer () {
 
       render({ splitHTML, store, routeContext, res })
     } catch (e) {
-      vite.ssrFixStacktrace(e)
+      if (!isProd) {
+        vite.ssrFixStacktrace(e)
+      }
+
       next(e)
     }
   })
@@ -101,6 +110,4 @@ async function createServer () {
   app.listen(port, function () {
     console.log('listening on port', port)
   })
-}
-
-createServer()
+})()
