@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 
 import App from './components/App'
 
-import configureStore from './redux/configureStore'
+import configureStore from './redux'
 
 const preloadedState = window.__PRELOADED_STATE__ || {}
 const store = configureStore(preloadedState)
@@ -18,7 +18,7 @@ const C = (
   </BrowserRouter>
 )
 
-if (module?.hot) {
+if (!import.meta.env.SSR) {
   createRoot(document.getElementById('root')).render(C)
 } else {
   hydrateRoot(document.getElementById('root'), C)

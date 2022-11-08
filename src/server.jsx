@@ -1,66 +1,17 @@
 import React from 'react'
-import compression from 'compression'
-import path from 'path'
-import { Helmet } from 'react-helmet'
-import fs from 'fs'
 import { renderToPipeableStream } from 'react-dom/server'
+import { StaticRouter } from 'react-router-dom/server'
+import { Helmet } from 'react-helmet'
 import { Provider } from 'react-redux'
 
-import configureStore from './../redux/configureStore'
-import App from './../components/App'
-import { StaticRouter } from 'react-router-dom/server'
+import App from './components/App'
+import configureStore from './redux/index.js'
 
-// ------- EXPRESS
-const express = require('express')
-const app = express()
-
-// gzip
-app.use(compression())
-
-// health check
-app.get('/healthz', function (req, res) {
-  res.status(200)
-  res.header('Content-Type', 'text/plain')
-  res.send(null)
-  res.end()
-})
-
-// static files
-app.use('/assets', express.static(path.resolve(__dirname, 'assets'), { maxAge: '30d' }))
-
-app.disable('x-powered-by')
-app.enable('trust proxy')
-
-const clientHTML = fs.readFileSync(path.resolve(__dirname, 'index.html')).toString('utf8')
-
-// REDUX MIDDLEWARE
-app.use((req, res, next) => {
-  if (path.extname(req.path)) {
-    res.status(404)
-    res.end()
-
-    return
-  }
+export async function render ({ splitHTML, res, routeContext }) {
+  let didError = false
 
   const store = configureStore({})
 
-  // Add
-  req.locals = {
-    store: store,
-    routeContext: {
-      originalUrl: req.originalUrl,
-      origin: req.protocol + '://' + req.headers.host
-    }
-  }
-
-  next()
-})
-
-app.get('/*', (req, res) => {
-  const { store, routeContext } = req.locals
-  const splitHTML = clientHTML.split('id=\'root\'>')
-
-  let didError = false
   const stream = renderToPipeableStream(
     (
       <StaticRouter location={routeContext.originalUrl}>
@@ -85,7 +36,7 @@ app.get('/*', (req, res) => {
           .replace('<meta id=\'helmet-link\'>', helmet.link.toString())
           .replace('<meta id=\'helmet-script\'>', helmet.script.toString())
 
-        res.write(splitHTML[0] + 'id="root">')
+        res.write(splitHTML[0])
 
         stream.pipe(res)
       },
@@ -113,10 +64,4 @@ app.get('/*', (req, res) => {
       }
     }
   )
-})
-
-const port = process.env.PORT || (process.env.NODE_ENV === 'production' ? 80 : 3000)
-
-app.listen(port, function () {
-  console.log('listening on port', port)
-})
+}

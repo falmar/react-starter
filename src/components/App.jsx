@@ -2,11 +2,11 @@ import React, { lazy, Suspense } from 'react'
 import { Link, Route, Routes } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 
-import Home from '@components/Home'
-import Counter from '@components/Counter'
-import Async from '@components/Async'
+import Home from './Home'
+import Counter from './Counter'
+import Async from './Async'
 
-const Sus = lazy(() => import('@components/Suspense'))
+const Sus = lazy(() => import('./Suspense'))
 
 export default function App () {
   return (
@@ -24,7 +24,6 @@ export default function App () {
 
       <Routes>
         <Route exact path='/' element={<Home />} />
-        <Route path='/counter' element={<Counter />} />
         <Route path='/counter' element={<Counter />} />
         <Route path='/async' element={<Async />} />
         <Route

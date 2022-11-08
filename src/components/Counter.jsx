@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import classnames from 'classnames'
-import { decrement, increment } from '@redux'
+import { decrement, increment } from '../redux/counter'
 
 import './Counter.scss'
 
